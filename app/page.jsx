@@ -1,4 +1,5 @@
 import Feed from '../components/Feed';
+import { Suspense } from 'react';
 
 const Home = () => {
   return (
@@ -15,7 +16,9 @@ const Home = () => {
       </p>
 
       {/* Feed */}
-      <Feed/>
+      <Suspense fallback={<div>Loading...</div>}>
+        <Feed />
+      </Suspense>
     </section>
   );
 };
