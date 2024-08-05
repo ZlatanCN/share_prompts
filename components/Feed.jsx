@@ -1,10 +1,9 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import PromptCardList from '@components/PromptCardList';
 import { useRouter } from 'next/navigation';
-import { useParams } from 'next/navigation';
 
 const Feed = () => {
   const searchParams = useSearchParams();
@@ -81,7 +80,9 @@ const Feed = () => {
         />
       </form>
 
-      <PromptCardList prompts={filteredPrompts} handleTagClick={() => {}}/>
+      <Suspense fallback={<div>Loading...</div>}>
+        <PromptCardList prompts={filteredPrompts}/>
+      </Suspense>
     </section>
   );
 };
