@@ -76,9 +76,7 @@ const Feed = () => {
         />
       </form>
 
-      <Suspense fallback={<div>Loading...</div>}>
-        <PromptCardList prompts={filteredPrompts}/>
-      </Suspense>
+      <PromptCardList prompts={filteredPrompts}/>
     </section>
   );
 };
