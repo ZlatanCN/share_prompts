@@ -47,6 +47,7 @@ const Feed = () => {
       );
     }
     setFilteredPrompts(data);
+    console.log('filteredPrompts:', data);
   };
 
   useEffect(() => {
