@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import PromptCardList from '@components/PromptCardList';
 import { useRouter } from 'next/navigation';
+import PromptCard from '@components/PromptCard';
 
 const Feed = () => {
   const searchParams = useSearchParams();
@@ -81,7 +82,14 @@ const Feed = () => {
         />
       </form>
 
-      <PromptCardList prompts={filteredPrompts}/>
+      <div className={'mt-16 prompt_layout'}>
+        {filteredPrompts.map((prompt) => (
+          <PromptCard
+            key={prompt._id}
+            prompt={prompt}
+          />
+        ))}
+      </div>
     </section>
   );
 };
