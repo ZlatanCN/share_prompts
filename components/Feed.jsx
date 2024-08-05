@@ -58,6 +58,7 @@ const Feed = () => {
   }, [searchParams]);
 
   useEffect(() => {
+    fetchPrompts()
     return () => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);

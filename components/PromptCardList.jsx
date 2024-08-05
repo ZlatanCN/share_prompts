@@ -7,7 +7,6 @@ const PromptCardList = (props) => {
         <PromptCard
           key={prompt._id}
           prompt={prompt}
-          handleTagClick={props.handleTagClick}
         />
       ))}
     </div>
