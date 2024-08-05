@@ -32,7 +32,11 @@ const Feed = () => {
   };
 
   const fetchPrompts = async (text) => {
-    const response = await fetch('/api/prompt');
+    const response = await fetch('/api/prompt', {
+      headers: {
+        'Content-Type': 'no-store',
+      },
+    });
     let data = await response.json();
 
     setPrompts(data);
