@@ -53,12 +53,11 @@ const Feed = () => {
   useEffect(() => {
     const tag = searchParams.get('search-tag');
     console.log('searchParams:', tag);
-    fetchPrompts(tag)
+    fetchPrompts(tag);
     setSearchText(tag);
   }, [searchParams]);
 
   useEffect(() => {
-    fetchPrompts()
     return () => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
