@@ -4,7 +4,7 @@ import Form from '@components/Form';
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-const EditPromptComponent = () => {
+const EditPrompt = () => {
   const [submit, setSubmit] = useState(false);
   const [post, setPost] = useState({
     prompt: '',
@@ -67,4 +67,4 @@ const EditPromptComponent = () => {
   );
 };
 
-export default EditPromptComponent;
+export default EditPrompt;

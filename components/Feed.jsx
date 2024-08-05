@@ -1,9 +1,9 @@
-'use client';
+'use client'
 
 import { useState, useEffect, useRef, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import PromptCardList from '@components/PromptCardList';
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/router';
 
 const Feed = () => {
   const searchParams = useSearchParams();
@@ -48,10 +48,6 @@ const Feed = () => {
     }
     setFilteredPrompts(data);
   };
-
-  /*useEffect(() => {
-    fetchPrompts(searchParams.get('search-tag'));
-  }, []);*/
 
   useEffect(() => {
     const tag = searchParams.get('search-tag');
