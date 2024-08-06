@@ -1,95 +1,71 @@
-'use client'
+'use client';
 
-import { useState, useEffect, useRef, Suspense } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
 import PromptCardList from '@components/PromptCardList';
-import { useRouter } from 'next/navigation';
-import PromptCard from '@components/PromptCard';
+import Search from '@components/Search';
 
 const Feed = () => {
-  const searchParams = useSearchParams();
-  const [searchText, setSearchText] = useState('');
+  const params = useSearchParams();
   const [prompts, setPrompts] = useState([]);
-  const [filteredPrompts, setFilteredPrompts] = useState([]);
-  const timeoutRef = useRef(null);
-  const router = useRouter();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const handleSearchTextChange = (e) => {
-    const newSearchText = e.target.value;
-    setSearchText(newSearchText);
-
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-
-    timeoutRef.current = setTimeout(() => {
-      if (newSearchText === '') {
-        router.push('/');
-        setFilteredPrompts(prompts);
-      } else {
-        router.push(`/?search-tag=${newSearchText}`);
+  const fetchPrompts = async () => {
+    try {
+      const response = await fetch('/api/prompt');
+      if (!response.ok) {
+        throw new Error('Failed to fetch prompts');
       }
-    }, 300);
+      const data = await response.json();
+      setPrompts(data);
+    } catch (error) {
+      setError(error.message);
+      console.error('Failed to fetch prompts:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const fetchPrompts = async (text) => {
-    const response = await fetch('/api/prompt', {
-      headers: {
-        'Content-Type': 'no-store',
-      },
-    });
-    let data = await response.json();
+  useEffect(() => {
+    fetchPrompts();
+  }, []);
 
-    setPrompts(data);
-    if (text) {
-      const regex = new RegExp(text, 'ui');
-      data = data.filter(
-        prompt => (
-          regex.test(prompt.prompt) ||
-          regex.test(prompt.tag) ||
-          regex.test(prompt.creator.username)
-        ),
+  const filteredPrompts = useMemo(() => {
+    console.log('params:', params.get('search-text'));
+    if (params.has('search-text')) {
+      const text = params.get('search-text').toLowerCase();
+      return prompts.filter(
+        (prompt) =>
+          prompt.tag.toLowerCase().includes(text) ||
+          prompt.prompt.toLowerCase().includes(text) ||
+          prompt.creator.username.toLowerCase().includes(text),
       );
     }
-    setFilteredPrompts(data);
-    console.log('filteredPrompts:', data);
-  };
+    return prompts;
+  }, [params, prompts]);
 
-  useEffect(() => {
-    const tag = searchParams.get('search-tag');
-    console.log('searchParams:', tag);
-    fetchPrompts(tag);
-    setSearchText(tag);
-  }, [searchParams]);
+  if (loading) {
+    return (
+      <section className="feed flex flex-col items-center justify-center">
+        <div className="w-16 h-16 border-4 border-orange-500 border-t-transparent border-solid rounded-full animate-spin"/>
+        <p className="mt-4 text-lg font-semibold text-gray-800">Loading prompts...</p>
+      </section>
+    );
+  }
 
-  useEffect(() => {
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-    };
-  }, []);
+  if (error) {
+    return (
+      <section className={'feed'}>
+        <p>Failed to load prompts</p>
+      </section>
+    );
+  }
 
   return (
     <section className={'feed'}>
-      <form className={'relative w-full flex-center'}>
-        <input
-          type={'text'}
-          placeholder={'Search for ...'}
-          value={searchText}
-          onChange={handleSearchTextChange}
-          className={'search_input peer'}
-        />
-      </form>
-
-      <div className={'mt-16 prompt_layout'}>
-        {filteredPrompts.map((prompt) => (
-          <PromptCard
-            key={prompt._id}
-            prompt={prompt}
-          />
-        ))}
-      </div>
+      <Search/>
+      <PromptCardList prompts={filteredPrompts}/>
     </section>
   );
 };

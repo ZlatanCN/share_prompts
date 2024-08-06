@@ -16,7 +16,13 @@ const Home = () => {
       </p>
 
       {/* Feed */}
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={
+        <div className={'w-full flex-center'}>
+          <p className={'font-inter text-gray-400 text-xl'}>
+            Loading ...
+          </p>
+        </div>
+      }>
         <Feed />
       </Suspense>
     </section>

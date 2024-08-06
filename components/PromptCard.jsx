@@ -41,7 +41,7 @@ const PromptCard = (props) => {
 
   const handleTagClick = () => {
     const tag = props.prompt.tag.replace('#', '');
-    router.push(`/?search-tag=${tag}`);
+    router.push(`/?search-text=${tag}`);
   }
 
   const handleProfileClick = () => {
