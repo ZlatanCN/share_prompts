@@ -4,6 +4,8 @@ import { useState, useEffect, useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
 import PromptCardList from '@components/PromptCardList';
 import Search from '@components/Search';
+import Profile from '@components/Profile';
+import PromptCard from '@components/PromptCard';
 
 const Feed = () => {
   const params = useSearchParams();
@@ -19,6 +21,7 @@ const Feed = () => {
       }
       const data = await response.json();
       setPrompts(data);
+      console.log('Prompts:', data);
     } catch (error) {
       setError(error.message);
       console.error('Failed to fetch prompts:', error);
@@ -42,14 +45,17 @@ const Feed = () => {
           prompt.creator.username.toLowerCase().includes(text),
       );
     }
+    console.log('filteredPrompts:', prompts);
     return prompts;
   }, [params, prompts]);
 
   if (loading) {
     return (
       <section className="feed flex flex-col items-center justify-center">
-        <div className="w-16 h-16 border-4 border-orange-500 border-t-transparent border-solid rounded-full animate-spin"/>
-        <p className="mt-4 text-lg font-semibold text-gray-800">Loading prompts...</p>
+        <div
+          className="w-16 h-16 border-4 border-orange-500 border-t-transparent border-solid rounded-full animate-spin"/>
+        <p className="mt-4 text-lg font-semibold text-gray-800">Loading
+          prompts...</p>
       </section>
     );
   }
